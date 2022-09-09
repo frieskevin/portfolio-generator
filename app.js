@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 // const pageHTML = generatePage(name, github);
 
 
@@ -59,7 +59,7 @@ const promptProject = portfolioData => {
     Add a New Project
     =================
     `);
-        return inquirer
+    return inquirer
         .prompt([
             {
                 type: 'input',
@@ -118,7 +118,7 @@ const promptProject = portfolioData => {
                 message: 'Would you like to enter another project?',
                 default: false
             }
-            
+
         ])
         .then(projectData => {
             portfolioData.projects.push(projectData);
@@ -135,6 +135,12 @@ const promptProject = portfolioData => {
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData)
+        const pageHTML = generatePage(portfolioData);
+
+        fs.writeFile('./index.html', pageHTML, err => {
+          if (err) throw new Error(err);
+
+          console.log('Page created! Check out index.html in this directory to see it!');
+        });
     });
 ;
